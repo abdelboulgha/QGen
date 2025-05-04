@@ -33,4 +33,32 @@ public class ProfesseurService {
     public void deleteProfesseur(Long id) {
         professeurRepository.deleteById(id);
     }
+
+    public Professeur updateProfesseur(Long id, Professeur professeurDetails) {
+        return professeurRepository.findById(id)
+                .map(existingProfesseur -> {
+                    // Mise à jour des champs non-nulls
+                    if (professeurDetails.getNom() != null) {
+                        existingProfesseur.setNom(professeurDetails.getNom());
+                    }
+                    if (professeurDetails.getPrenom() != null) {
+                        existingProfesseur.setPrenom(professeurDetails.getPrenom());
+                    }
+                    if (professeurDetails.getEmail() != null) {
+                        // Vérification de l'unicité de l'email
+                        if (!existingProfesseur.getEmail().equals(professeurDetails.getEmail()) &&
+                                professeurRepository.existsByEmail(professeurDetails.getEmail())) {
+                            throw new RuntimeException("Email déjà utilisé par un autre professeur");
+                        }
+                        existingProfesseur.setEmail(professeurDetails.getEmail());
+                    }
+                    if (professeurDetails.getMotDePasse() != null) {
+                        existingProfesseur.setMotDePasse(professeurDetails.getMotDePasse());
+                    }
+                    // Ajoutez d'autres champs si nécessaire
+
+                    return professeurRepository.save(existingProfesseur);
+                })
+                .orElseThrow(() -> new RuntimeException("Professeur non trouvé avec l'id: " + id));
+    }
 }

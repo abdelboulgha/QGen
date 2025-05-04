@@ -32,6 +32,29 @@ public class ProfesseurController {
         return professeurService.saveProfesseur(professeur);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Professeur> updateProfesseur(@PathVariable Long id, @RequestBody Professeur professeurDetails) {
+        Optional<Professeur> professeurOptional = professeurService.getProfesseurById(id);
+
+        if (professeurOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Professeur existingProfesseur = professeurOptional.get();
+
+        // Mettre à jour les champs nécessaires
+        if (professeurDetails.getNom() != null) {
+            existingProfesseur.setNom(professeurDetails.getNom());
+        }
+        if (professeurDetails.getPrenom() != null) {
+            existingProfesseur.setPrenom(professeurDetails.getPrenom());
+        }
+        // Ajouter d'autres champs à mettre à jour selon votre modèle Professeur
+
+        Professeur updatedProfesseur = professeurService.saveProfesseur(existingProfesseur);
+        return ResponseEntity.ok(updatedProfesseur);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProfesseur(@PathVariable Long id) {
         professeurService.deleteProfesseur(id);
