@@ -26,12 +26,11 @@ public class UtilisateurService {
         return utilisateurRepository.findById(id);
     }
 
-    public Utilisateur getUtilisateurByEmail(String email) {
+    public Optional<Utilisateur> getUtilisateurByEmail(String email) {
         return utilisateurRepository.findByEmail(email);
     }
 
     public Utilisateur saveUtilisateur(Utilisateur utilisateur) {
-        // Aucun encodage de mot de passe
         return utilisateurRepository.save(utilisateur);
     }
 
@@ -40,11 +39,8 @@ public class UtilisateurService {
     }
 
     public boolean authenticate(String email, String password) {
-        Utilisateur utilisateur = utilisateurRepository.findByEmail(email);
-        if (utilisateur != null) {
-            // Comparaison directe des mots de passe sans encodage
-            return password.equals(utilisateur.getMotDePasse());
-        }
-        return false;
+        return utilisateurRepository.findByEmail(email)
+                .map(utilisateur -> password.equals(utilisateur.getMotDePasse()))
+                .orElse(false);
     }
 }

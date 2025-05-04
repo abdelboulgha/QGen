@@ -1,5 +1,6 @@
 package com.example.backend.beans;
 
+import com.example.backend.security.Role;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,10 +16,12 @@ public class Etudiant extends Utilisateur {
     // Constructeur par défaut requis par JPA
     public Etudiant() {
         super();
+        setRole(Role.ETUDIANT);
     }
 
     public Etudiant(String nom, String prenom, String email, String motDePasse) {
         super(nom, prenom, email, motDePasse);
+        setRole(Role.ETUDIANT);
     }
 
     // Getters and Setters

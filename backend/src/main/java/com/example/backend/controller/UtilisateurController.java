@@ -29,9 +29,11 @@ public class UtilisateurController {
 
     @GetMapping("/email/{email}")
     public ResponseEntity<Utilisateur> getUtilisateurByEmail(@PathVariable String email) {
-        Utilisateur utilisateur = utilisateurService.getUtilisateurByEmail(email);
-        return utilisateur != null ? ResponseEntity.ok(utilisateur) : ResponseEntity.notFound().build();
+        return utilisateurService.getUtilisateurByEmail(email)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
+
 
     @PostMapping
     public Utilisateur createUtilisateur(@RequestBody Utilisateur utilisateur) {

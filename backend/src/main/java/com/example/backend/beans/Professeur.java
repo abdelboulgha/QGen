@@ -1,5 +1,6 @@
 package com.example.backend.beans;
 
+import com.example.backend.security.Role;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -9,10 +10,18 @@ public class Professeur extends Utilisateur {
     @OneToMany(mappedBy = "createur", cascade = CascadeType.ALL)
     private List<Quiz> quizzesCrees;
 
+    // Constructeurs
+    public Professeur() {
+        super();
+        setRole(Role.PROFESSEUR);
+    }
+
+    public Professeur(String nom, String prenom, String email, String motDePasse) {
+        super(nom, prenom, email, motDePasse);
+        setRole(Role.PROFESSEUR);
+    }
+
     // Getters and Setters
-    // Constructors
-
-
     public List<Quiz> getQuizzesCrees() {
         return quizzesCrees;
     }
