@@ -1,0 +1,58 @@
+/* Grille pour les cartes */
+.dashboard-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Deux colonnes */
+    gap: 20px; /* Espacement entre les cartes */
+margin-left: center;
+    margin-top: 20px;
+  }
+  
+  /* Style des cartes */
+  .card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+  
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  
+  .card-content .stat-number {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  /* Chargement */
+  .loading {
+    text-align: center;
+    font-size: 18px;
+    color: #666;
+    margin-top: 20px;
+  }
+  .dashboard-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centre horizontalement */
+    justify-content: center; /* Centre verticalement si nécessaire */
+    min-height: 100vh; /* Assure que la hauteur prend tout l'écran */
+    padding: 20px;
+  }
+  
+.dashboard-content {
+  width: 80%; /* Ajustez la largeur selon vos besoins */
+  max-width: 1200px; /* Limite la largeur maximale */
+  margin: 0 auto; /* Centre horizontalement */
+}
