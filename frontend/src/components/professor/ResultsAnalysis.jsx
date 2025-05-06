@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import Layout from '../common/Layout';
+
 
 const ResultsAnalysis = () => {
   const [quizzes, setQuizzes] = useState([]);
@@ -79,11 +81,8 @@ const ResultsAnalysis = () => {
   });
 
   return (
-    <div className="content-area">
-      <div className="header-actions" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h1>Analyse des Résultats</h1>
-      </div>
-
+    <Layout title="Analyse des Résultats" userRole="professor"> 
+  
       <div className="filters mt-4">
         <div className="search-bar">
           <input
@@ -124,7 +123,7 @@ const ResultsAnalysis = () => {
           ))}
         </div>
       )}
-    </div>
+    </Layout>
   );
 };
 

@@ -1,6 +1,8 @@
 // components/professor/QuizManagement.jsx
+//import { Layout } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import Layout from '../common/Layout';
 
 const QuizManagement = () => {
   const [quizzes, setQuizzes] = useState([]);
@@ -9,7 +11,7 @@ const QuizManagement = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [quizToDelete, setQuizToDelete] = useState(null);
-
+  // 
   // Fetch quizzes
   useEffect(() => {
     // Mock API call
@@ -149,11 +151,7 @@ const QuizManagement = () => {
   });
 
   return (
-    <div className="content-area">
-      <div className="header-actions" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h1>Gestion des Quiz</h1>
-        <Link to="/professor/create-quiz" className="btn btn-primary">Créer un Quiz</Link>
-      </div>
+    <Layout title="Gestion des Quiz" userRole="professor">
       
       <div className="filters mt-4">
         <div className="search-bar">
@@ -174,7 +172,8 @@ const QuizManagement = () => {
           </select>
         </div>
       </div>
-      
+
+      <div class="btn-container"><Link to="/professor/create-quiz" className="btn btn-primary btn-1">Créer un Quiz</Link></div>
       {loading ? (
         <div className="loading">Chargement des quiz...</div>
       ) : filteredQuizzes.length === 0 ? (
@@ -267,7 +266,7 @@ const QuizManagement = () => {
           </div>
         </div>
       )}
-    </div>
+    </Layout>
   );
 };
 

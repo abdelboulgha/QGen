@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Layout from '../common/Layout';
 
 const ProfessorStudents = () => {
   const [students, setStudents] = useState([]);
@@ -46,11 +47,8 @@ const ProfessorStudents = () => {
   );
 
   return (
-    <div className="content-area">
-      <div className="header-actions" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h1>Liste des Étudiants</h1>
-      </div>
-
+    <Layout title="Liste des Étudiants" userRole="professor">
+      
       <div className="filters mt-4">
         <div className="search-bar">
           <input
@@ -90,7 +88,7 @@ const ProfessorStudents = () => {
           </table>
         </div>
       )}
-    </div>
+    </Layout>
   );
 };
 

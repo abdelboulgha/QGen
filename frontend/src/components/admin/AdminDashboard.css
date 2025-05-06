@@ -42,13 +42,8 @@ margin-left: center;
     color: #666;
     margin-top: 20px;
   }
-  .dashboard-layout {
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Centre horizontalement */
-    justify-content: center; /* Centre verticalement si nécessaire */
+  .dashboard-layout { /* Centre verticalement si nécessaire */
     min-height: 100vh; /* Assure que la hauteur prend tout l'écran */
-    padding: 20px;
   }
   
 .dashboard-content {

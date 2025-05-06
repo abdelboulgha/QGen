@@ -2,6 +2,7 @@
 import React from 'react';
 import GlobalSidebar from '../common/GlobalSidebar';
 import GlobalHeader from '../common/GlobalHeader';
+import '../../App.css';
 
 const Layout = ({ children, title = 'Tableau de Bord', userRole = 'professor' }) => {
   return (
