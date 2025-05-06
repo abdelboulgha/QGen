@@ -16,12 +16,12 @@ public class Etudiant extends Utilisateur {
     // Constructeur par défaut requis par JPA
     public Etudiant() {
         super();
-        setRole(Role.ETUDIANT);
+        setRole(Role.student);
     }
 
     public Etudiant(String nom, String prenom, String email, String motDePasse) {
         super(nom, prenom, email, motDePasse);
-        setRole(Role.ETUDIANT);
+        setRole(Role.student);
     }
 
     // Getters and Setters

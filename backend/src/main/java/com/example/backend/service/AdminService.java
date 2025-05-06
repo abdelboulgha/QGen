@@ -86,14 +86,14 @@ public class AdminService {
         }
 
         switch (roleEnum) {
-            case ADMIN:
+            case admin:
                 Admin admin = new Admin(nom, prenom, email, encodedPassword);
                 admin.setMustChangePassword(true); // Force le changement de mot de passe
                 utilisateur = adminRepository.save(admin);
                 sendCredentialsByEmail(utilisateur, roleEnum.toString()); // Envoyer email aussi pour les admins
                 break;
 
-            case PROFESSEUR:
+            case professor:
                 Professeur professeur = new Professeur();
                 professeur.setNom(nom);
                 professeur.setPrenom(prenom);
@@ -104,7 +104,7 @@ public class AdminService {
                 sendCredentialsByEmail(utilisateur, roleEnum.toString());
                 break;
 
-            case ETUDIANT:
+            case student:
                 Etudiant etudiant = new Etudiant(nom, prenom, email, encodedPassword);
                 etudiant.setMustChangePassword(true); // Force le changement de mot de passe
                 utilisateur = etudiantService.saveEtudiant(etudiant);
