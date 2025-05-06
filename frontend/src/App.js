@@ -81,7 +81,6 @@ function App() {
                 <ConditionalLayout>
                   <ProtectedRoute role="admin">
                     <div className="dashboard-layout">
-                      <Sidebar userRole="admin" />
                       <AdminDashboard />
                     </div>
                   </ProtectedRoute>
@@ -94,7 +93,6 @@ function App() {
                 <ConditionalLayout>
                   <ProtectedRoute role="admin">
                     <div className="dashboard-layout">
-                      <Sidebar userRole="admin" />
                       <UserManagement />
                     </div>
                   </ProtectedRoute>
@@ -107,7 +105,6 @@ function App() {
                 <ConditionalLayout>
                   <ProtectedRoute role="admin">
                     <div className="dashboard-layout">
-                      <Sidebar userRole="admin" />
                       <ProfManagement />
                     </div>
                   </ProtectedRoute>
@@ -198,7 +195,6 @@ function App() {
                 <ConditionalLayout>
                   <ProtectedRoute role="student">
                     <div className="dashboard-layout">
-                      <Sidebar userRole="student" />
                       <StudentDashboard />
                     </div>
                   </ProtectedRoute>
