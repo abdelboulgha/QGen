@@ -42,8 +42,6 @@ const UserManagement = () => {
 
   return (
     <Layout title="Gestion des Étudiants" userRole="admin">
-      <h2>Gestion des Étudiants</h2>
-
       {/* Champ de recherche */}
       <div className="search-bar">
         <input
