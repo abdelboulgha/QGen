@@ -65,8 +65,6 @@ const ProfessorDashboard = () => {
   
   return (
     <Layout title="Tableau de Bord" userRole="professor">
-      <h2>Bienvenue, {currentUser?.name || 'Professeur'}!</h2>
-      
       {loading ? (
         <div className="loading">Chargement des données...</div>
       ) : (

@@ -148,7 +148,6 @@ function App() {
                 <ConditionalLayout>
                   <ProtectedRoute role="professor">
                     <div className="dashboard-layout">
-                      <Sidebar userRole="professor" />
                       <QuizGenerator />
                     </div>
                   </ProtectedRoute>
