@@ -96,8 +96,10 @@ export const AuthProvider = ({ children }) => {
     currentUser,
     login,
     logout,
+
     register,
     checkTokenValidity
+
   };
 
   return (

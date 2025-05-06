@@ -372,3 +372,47 @@
       width: 25%;
     }
   }
+
+  /* Styles pour les pages d'authentification
+ * Inclut les formulaires de connexion, inscription, récupération de mot de passe, etc.
+ */
+
+/* Layout de base pour les pages d'authentification */
+.auth-layout {
+  height: 100vh;          /* Occupe toute la hauteur de l'écran */
+  overflow-y: auto;       /* Active la barre de scroll verticale si besoin */
+  padding: 20px;          /* Un peu d'espace autour */
+  box-sizing: border-box; /* Inclus le padding dans la hauteur */
+}
+
+/* Contenu des pages d'authentification */
+.auth-content input,
+.auth-content button {
+  font-size: 14px;
+  padding: 8px 12px;
+}
+
+.auth-content form {
+  max-width: 400px; /* Limite la largeur du formulaire */
+  margin: 0 auto;   /* Centre horizontalement */
+}
+
+/* Titres pour les pages d'authentification */
+.auth-content h1, 
+.auth-content h2, 
+.auth-content h3 {
+  font-size: 20px;
+}
+
+/* Adaptations responsives pour l'authentification */
+@media (max-width: 480px) {
+  .auth-content form {
+    max-width: 100%;
+    padding: 0 15px;
+  }
+  
+  .auth-content input,
+  .auth-content button {
+    font-size: 16px; /* Taille plus grande pour mobile */
+  }
+}

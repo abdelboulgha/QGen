@@ -8,11 +8,11 @@ public class Admin extends Utilisateur {
     // Constructeur par défaut requis par JPA
     public Admin() {
         super();
-        setRole(Role.admin);
+        setRole(Role.ADMIN);
     }
 
     public Admin(String nom, String prenom, String email, String motDePasse) {
         super(nom, prenom, email, motDePasse);
-        setRole(Role.admin);
+        setRole(Role.ADMIN);
     }
 }

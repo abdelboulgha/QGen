@@ -65,8 +65,6 @@ const ProfessorDashboard = () => {
   
   return (
     <Layout title="Tableau de Bord" userRole="professor">
-      <h2>Bienvenue, {currentUser?.name || 'Professeur'}!</h2>
-      
       {loading ? (
         <div className="loading">Chargement des données...</div>
       ) : (
@@ -141,15 +139,6 @@ const ProfessorDashboard = () => {
                   ))}
                 </tbody>
               </table>
-            </div>
-          </section>
-          
-          <section className="quick-actions">
-            <h2>Actions Rapides</h2>
-            <div className="action-buttons d-flex gap-2">
-              <Link to="/professor/create-quiz" className="btn btn-primary">Créer un Quiz</Link>
-              <Link to="/professor/manage-quiz" className="btn btn-secondary">Gérer les Quiz</Link>
-              <Link to="/professor/results" className="btn btn-secondary">Voir les Résultats</Link>
             </div>
           </section>
         </>

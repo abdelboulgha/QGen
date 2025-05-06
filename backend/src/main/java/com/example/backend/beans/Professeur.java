@@ -13,12 +13,12 @@ public class Professeur extends Utilisateur {
     // Constructeurs
     public Professeur() {
         super();
-        setRole(Role.professor);
+        setRole(Role.PROFESSOR);
     }
 
     public Professeur(String nom, String prenom, String email, String motDePasse) {
         super(nom, prenom, email, motDePasse);
-        setRole(Role.professor);
+        setRole(Role.PROFESSOR);
     }
 
     // Getters and Setters

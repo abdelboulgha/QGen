@@ -2,9 +2,9 @@ package com.example.backend.security;
 
 
 public enum Role {
-    admin,
-    professor,
-    student;
+    ADMIN,
+    PROFESSOR,
+    STUDENT;
 
     @Override
     public String toString() {

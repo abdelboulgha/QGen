@@ -197,74 +197,90 @@ const UserManagement = () => {
   };
 
   // Créer ou mettre à jour un étudiant
-  const handleSaveStudent = async () => {
-    // Validation simple
-    if (!newStudent.nom || !newStudent.prenom || !newStudent.email) {
-      setError('Veuillez remplir tous les champs obligatoires');
+const handleSaveStudent = async () => {
+  // Validation simple
+  if (!newStudent.nom || !newStudent.prenom || !newStudent.email) {
+    setError('Veuillez remplir tous les champs obligatoires');
+    return;
+  }
+
+  setIsLoading(true);
+  setError(null);
+  
+  try {
+    const token = checkAuth();
+    if (!token) {
+      setIsLoading(false);
       return;
     }
-
-    setIsLoading(true);
-    setError(null);
     
-    try {
-      const token = checkAuth();
-      if (!token) {
-        setIsLoading(false);
-        return;
+    const config = {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
       }
-      
-      const config = {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
+    };
+    
+    let response;
+    
+    if (newStudent.id) {
+      // Mise à jour d'un étudiant existant
+      const studentToUpdate = {
+        nom: newStudent.nom,
+        prenom: newStudent.prenom,
+        email: newStudent.email
       };
       
-      let response;
-      
-      if (newStudent.id) {
-        // Mise à jour d'un étudiant existant
-        response = await axios.put(
-          `http://localhost:8080/api/etudiants/${newStudent.id}`, 
-          newStudent,
-          config
-        );
-      } else {
-        // Création d'un nouvel étudiant
-        response = await axios.post(
-          'http://localhost:8080/api/admins/create-user', 
-          {
-            ...newStudent,
-            role: 'student'
-          },
-          config
-        );
+      // N'ajouter le mot de passe que s'il est fourni
+      if (newStudent.motDePasse) {
+        studentToUpdate.motDePasse = newStudent.motDePasse;
       }
       
-      const data = response.data;
+      console.log("Mise à jour étudiant:", studentToUpdate);
+      
+      response = await axios.put(
+        `http://localhost:8080/api/etudiants/${newStudent.id}`, 
+        studentToUpdate,
+        config
+      );
+      
+      console.log("Réponse mise à jour:", response.data);
       
       // Mettre à jour la liste des étudiants
-      if (newStudent.id) {
-        setStudents(students.map(student => 
-          student.id === newStudent.id ? data.utilisateur || data : student
-        ));
-      } else {
-        // Si on crée un nouvel étudiant, rafraîchir la liste complète
-        fetchStudents();
-      }
+      setStudents(students.map(student => 
+        student.id === newStudent.id ? {
+          ...student,
+          nom: newStudent.nom,
+          prenom: newStudent.prenom,
+          email: newStudent.email
+        } : student
+      ));
+    } else {
+      // Création d'un nouvel étudiant
+      response = await axios.post(
+        'http://localhost:8080/api/admins/create-user', 
+        {
+          ...newStudent,
+          role: 'STUDENT'
+        },
+        config
+      );
       
-      // Réinitialiser le formulaire et fermer la modal
-      setNewStudent({ nom: '', prenom: '', email: '', motDePasse: '' });
-      setIsModalOpen(false);
-      setSuccessMessage(data.message || 'Étudiant enregistré avec succès');
-      setTimeout(() => setSuccessMessage(''), 3000);
-    } catch (err) {
-      handleApiError(err, "Erreur lors de l'enregistrement");
-    } finally {
-      setIsLoading(false);
+      // Si on crée un nouvel étudiant, rafraîchir la liste complète
+      fetchStudents();
     }
-  };
+    
+    // Réinitialiser le formulaire et fermer la modal
+    setNewStudent({ nom: '', prenom: '', email: '', motDePasse: '' });
+    setIsModalOpen(false);
+    setSuccessMessage(newStudent.id ? 'Étudiant modifié avec succès' : 'Étudiant créé avec succès');
+    setTimeout(() => setSuccessMessage(''), 3000);
+  } catch (err) {
+    handleApiError(err, "Erreur lors de l'enregistrement");
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   // Filtrer les étudiants par nom ou prénom
   const filteredStudents = students.filter(student => {
@@ -291,28 +307,7 @@ const UserManagement = () => {
         <h2>Gestion des Étudiants</h2>
         
         {/* État d'authentification */}
-        <div className="auth-status" style={{ marginBottom: '20px', padding: '15px', background: authStatus.isValid ? '#e8f5e9' : '#ffebee', borderRadius: '5px' }}>
-          <h3>État de l'authentification</h3>
-          <p>{authStatus.message}</p>
-          
-          {!authStatus.isValid && (
-            <button 
-              onClick={handleLogin}
-              style={{ padding: '8px 16px', marginTop: '10px' }}
-            >
-              Se connecter
-            </button>
-          )}
-          
-          {authStatus.isValid && (
-            <button 
-              onClick={fetchStudents}
-              style={{ padding: '8px 16px', marginTop: '10px', marginRight: '10px' }}
-            >
-              Rafraîchir les données
-            </button>
-          )}
-        </div>
+        
         
         {/* Message de succès */}
         {successMessage && (

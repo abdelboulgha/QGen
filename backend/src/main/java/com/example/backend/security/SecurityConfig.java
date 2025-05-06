@@ -37,10 +37,9 @@ public class SecurityConfig {
                         .requestMatchers("/api/admins/create-user").permitAll()
                         .requestMatchers("/api/admins/create-user").permitAll()// Nécessite une authentification
                         //.requestMatchers("/api/admins/**").hasRole("ADMIN") // Réservé aux admins
-                        .requestMatchers("/api/admins").permitAll()
                         .requestMatchers("/api/admins/**").permitAll()
-                        .requestMatchers("/api/professeurs/**").hasAnyRole("ADMIN", "PROFESSEUR") // Admin et profs
-                        .requestMatchers("/api/etudiants/**").hasAnyRole("ADMIN", "PROFESSEUR") // Admin et profs
+                        .requestMatchers("/api/professeurs/**").hasAnyRole("ADMIN", "PROFESSOR") // Admin et profs
+                        .requestMatchers("/api/etudiants/**").hasAnyRole("ADMIN", "PROFESSOR") // Admin et profs
                         .requestMatchers("/api/utilisateurs/**").hasRole("ADMIN") // Réservé aux admins
                         // Les accès aux quiz dépendent du contexte métier
                         .requestMatchers("/api/quizzes/**").authenticated()

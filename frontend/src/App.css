@@ -18,13 +18,13 @@
   box-sizing: border-box; /* Inclus le padding dans la hauteur */
 }
 
+
 /* Optionnel : rétrécir encore les titres */
 .auth-content h1, .auth-content h2, .auth-content h3 {
   font-size: 20px;
 }
 .layout-with-sidebar {
-  margin-left: 250px;
-  padding-top: 60px;
+
   min-height: 100vh;
 }
 
@@ -36,6 +36,20 @@
   margin-right: 0 !important;
   padding-right: 20px !important;
   box-sizing: border-box !important;
+}
+
+.app-container {
+  width: 100%;
+  max-height: 100vh;
+}
+
+.main-content {
+  width: 100%;
+}
+
+.dashboard-layout {
+  width: 100%;
+  height: 100%;
 }
 
 /* Mise à jour pour les cartes du tableau de bord */
@@ -83,6 +97,30 @@
   border-radius: 8px;
   padding: 20px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.flex-1.overflow-y-auto {
+  width: 80%;
+  overflow-y: scroll;
+  max-height: 100vh;
+}
+main.w-full.h-full {
+  padding: 15px;
+}
+
+.w-full {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.btn-container{
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+a.btn.btn-primary.btn-1 {
+  width: 150px;
 }
 
 /* Améliorations pour les étapes */
@@ -579,5 +617,151 @@ hr {
   
   .dark-mode .results-table tbody tr:hover {
     background-color: #111827;
+  }
+}
+
+/* Styles pour la fenêtre modale */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-container {
+  background-color: white;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 700px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  animation: modalFadeIn 0.3s ease;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.modal-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #6b7280;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.modal-close:hover {
+  background-color: #f3f4f6;
+  color: #111827;
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 20px;
+  border-top: 1px solid #e5e7eb;
+}
+
+/* Quiz Generator Styles */
+.quiz-generator-container {
+  width: 100%;
+  max-width: 100%;
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.generation-options {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-lg {
+  padding: 10px 20px;
+  font-size: 1rem;
+}
+
+.file-upload {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.file-upload input[type="file"] {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+}
+
+.file-name {
+  color: #4b5563;
+  margin-left: 10px;
+  font-size: 0.875rem;
+}
+
+.hidden {
+  display: none;
+}
+
+.questions-preview {
+  margin-top: 16px;
+}
+
+.question-item {
+  background-color: #f9fafb;
+  transition: all 0.2s ease;
+}
+
+.question-item:hover {
+  background-color: #f3f4f6;
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }

@@ -179,16 +179,8 @@ const Login = () => {
               </button>
             </form>
             
-            <div className="auth-alternative">
-              <p>Continuer avec</p>
-              <button className="social-login-button" onClick={handleGoogleLogin}>
-                <img src={googleImg} alt="Google" /> Continuer avec Google
-              </button>
-            </div>
             
             <div className="auth-links">
-              <Link to="/register" className="register-link">S'inscrire</Link>
-              <span style={{ margin: '0 10px', color: '#ccc' }}>|</span>
               <Link to="/forgot-password" className="forgot-password-link">Mot de passe oublié?</Link>
             </div>
           </div>

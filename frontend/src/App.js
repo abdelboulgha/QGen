@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/common/ProtectedRoute';
-import QuizDetails from './components/professor/QuizDetails';
+
 // Common Components
 import Header from './components/common/GlobalHeader';
 import Footer from './components/common/Footer';
@@ -10,7 +10,6 @@ import Sidebar from './components/common/GlobalSidebar';
 
 // Authentication Pages
 import Login from './pages/Login';
-import Register from './pages/Register';
 
 // Admin Components
 import AdminDashboard from './components/admin/AdminDashboard';
@@ -20,6 +19,7 @@ import ProfManagement from './components/admin/profManagement';
 // Professor Components
 import ProfessorDashboard from './components/professor/ProfessorDashboard';
 import QuizCreation from './components/professor/QuizCreation';
+import QuizGenerator from './components/professor/QuizGenerator'; // Import du nouveau composant
 import QuizManagement from './components/professor/QuizManagement';
 import ResultsAnalysis from './components/professor/ResultsAnalysis';
 import ProfessorStudents from './components/professor/ProfessorStudents';
@@ -34,17 +34,15 @@ import './App.css';
 // Composant de mise en page conditionnelle
 const ConditionalLayout = ({ children }) => {
   const location = useLocation();
-  const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
+  const isAuthPage = location.pathname === '/login';
 
   return (
     <div className={isAuthPage ? 'auth-layout' : 'app-layout'}>
       {/* N'affiche pas le Header sur les pages d'authentification */}
-      {!isAuthPage && <Header />}
+    
       <div className={isAuthPage ? 'auth-content' : 'main-content'}>
         {children}
       </div>
-      {/* N'affiche pas le Footer sur les pages d'authentification */}
-      {!isAuthPage && <Footer />}
     </div>
   );
 };
@@ -74,15 +72,8 @@ function App() {
                 </ConditionalLayout>
               }
             />
-            <Route
-              path="/register"
-              element={
-                <ConditionalLayout>
-                  <Register />
-                </ConditionalLayout>
-              }
-            />
-
+          
+              
             {/* Admin Routes - Avec Header et Footer */}
             <Route
               path="/admin"
@@ -90,7 +81,6 @@ function App() {
                 <ConditionalLayout>
                   <ProtectedRoute role="admin">
                     <div className="dashboard-layout">
-                      <Sidebar userRole="admin" />
                       <AdminDashboard />
                     </div>
                   </ProtectedRoute>
@@ -103,7 +93,6 @@ function App() {
                 <ConditionalLayout>
                   <ProtectedRoute role="admin">
                     <div className="dashboard-layout">
-                      <Sidebar userRole="admin" />
                       <UserManagement />
                     </div>
                   </ProtectedRoute>
@@ -116,7 +105,6 @@ function App() {
                 <ConditionalLayout>
                   <ProtectedRoute role="admin">
                     <div className="dashboard-layout">
-                      <Sidebar userRole="admin" />
                       <ProfManagement />
                     </div>
                   </ProtectedRoute>
@@ -124,6 +112,7 @@ function App() {
               }
             />
 
+          
             {/* Professor Routes - Avec Header et Footer */}
             <Route
               path="/professor"
@@ -131,7 +120,6 @@ function App() {
                 <ConditionalLayout>
                   <ProtectedRoute role="professor">
                     <div className="dashboard-layout">
-                      <Sidebar userRole="professor" />
                       <ProfessorDashboard />
                     </div>
                   </ProtectedRoute>
@@ -144,8 +132,20 @@ function App() {
                 <ConditionalLayout>
                   <ProtectedRoute role="professor">
                     <div className="dashboard-layout">
-                      <Sidebar userRole="professor" />
                       <QuizCreation />
+                    </div>
+                  </ProtectedRoute>
+                </ConditionalLayout>
+              }
+            />
+            {/* Nouvelle route pour le générateur de quiz */}
+            <Route
+              path="/professor/generate-quiz"
+              element={
+                <ConditionalLayout>
+                  <ProtectedRoute role="professor">
+                    <div className="dashboard-layout">
+                      <QuizGenerator />
                     </div>
                   </ProtectedRoute>
                 </ConditionalLayout>
@@ -157,7 +157,6 @@ function App() {
                 <ConditionalLayout>
                   <ProtectedRoute role="professor">
                     <div className="dashboard-layout">
-                      <Sidebar userRole="professor" />
                       <QuizManagement />
                     </div>
                   </ProtectedRoute>
@@ -170,21 +169,7 @@ function App() {
                 <ConditionalLayout>
                   <ProtectedRoute role="professor">
                     <div className="dashboard-layout">
-                      <Sidebar userRole="professor" />
                       <ResultsAnalysis />
-                    </div>
-                  </ProtectedRoute>
-                </ConditionalLayout>
-              }
-            />
-            <Route
-              path="/professor/quiz-details/:id"
-              element={
-                <ConditionalLayout>
-                  <ProtectedRoute role="professor">
-                    <div className="dashboard-layout">
-                      <Sidebar userRole="professor" />
-                      <QuizDetails />
                     </div>
                   </ProtectedRoute>
                 </ConditionalLayout>
@@ -196,7 +181,6 @@ function App() {
                 <ConditionalLayout>
                   <ProtectedRoute role="professor">
                     <div className="dashboard-layout">
-                      <Sidebar userRole="professor" />
                       <ProfessorStudents />
                     </div>
                   </ProtectedRoute>
@@ -211,7 +195,6 @@ function App() {
                 <ConditionalLayout>
                   <ProtectedRoute role="student">
                     <div className="dashboard-layout">
-                      <Sidebar userRole="student" />
                       <StudentDashboard />
                     </div>
                   </ProtectedRoute>

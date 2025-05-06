@@ -10,6 +10,7 @@ import {
   X 
 } from 'lucide-react';
 import Layout from '../common/Layout';
+import logoImg from '../../utils/images/logo.png';
 
 const QuizCreation = () => {
   const navigate = useNavigate();
@@ -323,6 +324,19 @@ const QuizCreation = () => {
   return (
     <Layout title="Créer un Quiz" userRole="professor">
       <div className="quiz-creation-container">
+        <div className="header-section d-flex justify-between align-center mb-4">
+          <div className="logo-container">
+            <img src={logoImg} alt="QGen Logo" className="logo" style={{ height: '50px' }} />
+          </div>
+          <button 
+            type="button" 
+            className="btn btn-info"
+            onClick={() => navigate('/professor/generate-quiz')}
+          >
+            Générer Quiz
+          </button>
+        </div>
+
         <div className="stepper">
           {steps.map((step, index) => (
             <React.Fragment key={index}>
@@ -337,7 +351,7 @@ const QuizCreation = () => {
           ))}
         </div>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="centered-form" style={{ maxWidth: '800px', margin: '0 auto' }}>
           {steps[activeStep].content}
           
           <div className="form-actions d-flex justify-between mt-4">

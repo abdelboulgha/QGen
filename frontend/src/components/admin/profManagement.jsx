@@ -42,8 +42,6 @@ const ProfManagement = () => {
 
   return (
     <Layout title="Gestion des Professeurs" userRole="admin">
-      <h2>Gestion des Professeurs</h2>
-
       {/* Champ de recherche */}
       <div className="search-bar">
         <input
