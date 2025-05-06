@@ -1,0 +1,356 @@
+/* AuthStyleFix.css - Styles améliorés et harmonisés pour l'authentification */
+
+/* Reset des styles contradictoires dans App.css */
+.auth-content input,
+.auth-content button {
+  font-size: initial;
+  padding: initial;
+}
+
+.auth-content form {
+  max-width: initial;
+  margin: initial;
+}
+
+.auth-content h1, 
+.auth-content h2, 
+.auth-content h3 {
+  font-size: initial;
+}
+
+/* Animation d'entrée manquante */
+@keyframes animate-in {
+  from { 
+    opacity: 0; 
+    transform: translateY(20px);
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0);
+  }
+}
+
+.animate-in {
+  animation: animate-in 0.5s ease forwards;
+}
+
+/* Corrections de layout */
+.auth-page {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 0;
+  margin: 0;
+  overflow: hidden; /* Empêche les débordements */
+}
+
+.auth-layout {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  background-color: #fff;
+  overflow: hidden;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.1);
+  padding: 0 !important; /* Remplace le padding défini dans App.css */
+}
+
+/* Améliorations du sidebar */
+.auth-sidebar {
+  flex: 0 0 35%;
+  background-color: #00a89c;
+  color: white;
+  padding: 40px 30px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  justify-content: space-between; /* Distribue l'espace verticalement */
+}
+
+.auth-logo {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px; /* Réduit un peu pour un meilleur équilibre */
+}
+
+.auth-slogan {
+  margin-top: 0; /* Supprime le margin-top excessif */
+  padding: 0 15px;
+  flex-grow: 1; /* Permet à cet élément de prendre l'espace disponible */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Centre verticalement */
+}
+
+/* Améliorations du contenu */
+.auth-content {
+  flex: 1;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #f9f9f9;
+  overflow-y: auto; /* Permet le défilement si nécessaire */
+}
+
+.auth-welcome {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.auth-welcome h1 {
+  font-size: 32px !important; /* Force la taille malgré App.css */
+  color: #00a89c;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.auth-form-container {
+  width: 100%;
+  max-width: 450px;
+  padding: 35px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.auth-form-container:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.auth-form-title {
+  text-align: center;
+  font-size: 24px !important; /* Force la taille malgré App.css */
+  font-weight: bold;
+  margin-bottom: 30px;
+  color: #333;
+  letter-spacing: 0.5px;
+}
+
+/* Amélioration des inputs */
+.input-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background-color: #f2f6f8;
+  border-radius: 6px;
+  padding: 0 15px;
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
+  margin-bottom: 20px;
+}
+
+.input-icon:focus-within {
+  border-color: #00a89c;
+  box-shadow: 0 0 0 3px rgba(0, 168, 156, 0.15);
+}
+
+.auth-input {
+  width: 100%;
+  padding: 14px 10px;
+  border: none;
+  background-color: transparent;
+  font-size: 15px;
+  outline: none;
+  color: #333;
+}
+
+/* Amélioration du bouton */
+.auth-button {
+  width: 100%;
+  padding: 15px;
+  background-color: #00a89c;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 6px rgba(0, 168, 156, 0.2);
+}
+
+.auth-button:hover {
+  background-color: #00968c;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 168, 156, 0.3);
+}
+
+.auth-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 168, 156, 0.2);
+}
+
+/* Amélioration de la séparation */
+.auth-alternative p {
+  color: #777;
+  font-size: 14px;
+  margin-bottom: 15px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-alternative p:before,
+.auth-alternative p:after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background-color: #ddd;
+}
+
+.auth-alternative p:before {
+  margin-right: 10px;
+}
+
+.auth-alternative p:after {
+  margin-left: 10px;
+}
+
+/* Amélioration du bouton Google */
+.social-login-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.social-login-button:hover {
+  background-color: #f5f5f5;
+  border-color: #ccc;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+}
+
+.social-login-button img {
+  margin-right: 10px;
+  width: 20px;
+  height: 20px;
+}
+
+/* Amélioration des liens */
+.auth-links {
+  margin-top: 25px;
+  text-align: center;
+}
+
+.auth-links a {
+  color: #00a89c;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  padding: 5px;
+}
+
+.auth-links a:hover {
+  color: #008a80;
+  text-decoration: underline;
+}
+
+/* Responsive amélioré */
+@media (max-width: 1200px) {
+  .auth-sidebar {
+    flex: 0 0 40%;
+  }
+  
+  .auth-slogan h2 {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 992px) {
+  .auth-layout {
+    flex-direction: column;
+    height: auto;
+    min-height: 100vh;
+  }
+  
+  .auth-sidebar {
+    flex: 0 0 auto;
+    padding: 30px 20px;
+    min-height: 250px;
+  }
+  
+  .auth-logo {
+    margin-bottom: 20px;
+  }
+  
+  .auth-slogan {
+    margin: 30px 0;
+    text-align: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .auth-page {
+    padding: 0;
+  }
+  
+  .auth-content {
+    padding: 30px 20px 60px;
+  }
+  
+  .auth-form-container {
+    padding: 25px 20px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+  }
+  
+  .auth-welcome h1 {
+    font-size: 28px !important;
+  }
+  
+  .auth-slogan h2 {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-welcome h1 {
+    font-size: 24px !important;
+  }
+  
+  .auth-form-title {
+    font-size: 20px !important;
+  }
+  
+  .auth-button {
+    padding: 12px;
+  }
+  
+  .input-icon {
+    padding: 0 10px;
+  }
+  
+  .auth-input {
+    padding: 12px 8px;
+  }
+}
+
+/* Force le mode plein écran */
+.auth-layout {
+  height: 100vh !important;
+  min-height: 100vh !important;
+  overflow: hidden;
+}
+
+/* Correction pour l'indicateur de force du mot de passe */
+.password-strength {
+  margin-top: -15px;
+  margin-bottom: 15px;
+}

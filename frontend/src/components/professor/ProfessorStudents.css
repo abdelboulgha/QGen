@@ -1,0 +1,53 @@
+.content-area {
+    padding: 20px;
+  }
+  
+  .header-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .filters {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+  .search-bar input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  .table-container {
+    margin-top: 20px;
+    overflow-x: auto;
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .table th,
+  .table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+  }
+  
+  .table th {
+    background-color: #f9f9f9;
+    font-weight: bold;
+  }
+  
+  .table tr:hover {
+    background-color: #f2f2f2;
+  }
+  /* Ajoutez ce style dans votre fichier CSS */
+.table-container {
+  overflow-x: auto;
+  white-space: nowrap;
+}
