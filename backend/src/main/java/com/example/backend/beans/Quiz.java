@@ -1,6 +1,8 @@
 package com.example.backend.beans;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.util.Date;
 import java.util.List;
@@ -10,7 +12,6 @@ public class Quiz {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String titre;
     private String description;
     private int duree; // in minutes
@@ -21,9 +22,11 @@ public class Quiz {
 
     @ManyToOne
     @JoinColumn(name = "professeur_id")
+    @JsonIgnoreProperties({"quizzesCrees"})
     private Professeur createur;
 
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
+
     private List<Question> questions;
 
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL)

@@ -1,7 +1,10 @@
 package com.example.backend.beans;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -16,18 +19,29 @@ public class Question {
     @Enumerated(EnumType.STRING)
     private TypeQuestion type;
 
-    private String theme;
-    private String niveauDifficulte;
 
     @ManyToOne
     @JoinColumn(name = "quiz_id")
+    @JsonIgnore()
     private Quiz quiz;
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReponseEtudiant> reponses;
 
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<QuestionOption> options = new ArrayList<>();
+
     // Getters and Setters
     // Constructors
+
+    public Question() {
+    }
+
+    public Question(String enonce, int points, TypeQuestion type) {
+        this.enonce = enonce;
+        this.points = points;
+        this.type = type;
+    }
 
 
     public Long getId() {
@@ -62,22 +76,6 @@ public class Question {
         this.type = type;
     }
 
-    public String getTheme() {
-        return theme;
-    }
-
-    public void setTheme(String theme) {
-        this.theme = theme;
-    }
-
-    public String getNiveauDifficulte() {
-        return niveauDifficulte;
-    }
-
-    public void setNiveauDifficulte(String niveauDifficulte) {
-        this.niveauDifficulte = niveauDifficulte;
-    }
-
     public Quiz getQuiz() {
         return quiz;
     }
@@ -92,5 +90,16 @@ public class Question {
 
     public void setReponses(List<ReponseEtudiant> reponses) {
         this.reponses = reponses;
+    }
+
+    public List<QuestionOption> getOptions() {
+        return options;
+    }
+    public void setOptions(List<QuestionOption> options) {
+        this.options = options;
+    }
+    public void addOption(QuestionOption option) {
+        options.add(option);
+        option.setQuestion(this);
     }
 }

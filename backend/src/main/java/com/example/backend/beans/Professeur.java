@@ -29,4 +29,5 @@ public class Professeur extends Utilisateur {
     public void setQuizzesCrees(List<Quiz> quizzesCrees) {
         this.quizzesCrees = quizzesCrees;
     }
+
 }

@@ -2,6 +2,7 @@ package com.example.backend.service;
 
 import com.example.backend.beans.Professeur;
 import com.example.backend.dao.ProfesseurRepository;
+import com.example.backend.security.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -60,5 +61,12 @@ public class ProfesseurService {
                     return professeurRepository.save(existingProfesseur);
                 })
                 .orElseThrow(() -> new RuntimeException("Professeur non trouvé avec l'id: " + id));
+    }
+
+    public Professeur getCurrentProfesseur() {
+        Long userId = SecurityUtil.getAuthenticatedUserId();
+        if (userId == null) throw new RuntimeException("User not authenticated");
+        return professeurRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Professeur not found"));
     }
 }
