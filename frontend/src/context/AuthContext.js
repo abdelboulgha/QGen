@@ -14,19 +14,32 @@ export const AuthProvider = ({ children }) => {
   // Check for saved user on load
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
-    
-    if (savedUser) {
-      const user = JSON.parse(savedUser);
-      setCurrentUser(user);
       
-      // Configuration d'Axios pour inclure le token dans les requêtes
-      if (user.token) {
-        axios.defaults.headers.common['Authorization'] = `Bearer ${user.token}`;
-      }
+    if (savedUser) {
+        try {
+            const user = JSON.parse(savedUser);
+            
+            // Vérifiez que le token existe et a une structure valide
+            if (user && user.token && typeof user.token === 'string' && user.token.length > 10) {
+                setCurrentUser(user);
+                
+                // Configuration d'Axios pour inclure le token dans les requêtes
+                axios.defaults.headers.common['Authorization'] = `Bearer ${user.token}`;
+            } else {
+                // Token invalide, nettoyage
+                console.warn("Token invalide détecté au chargement");
+                localStorage.removeItem('user');
+                delete axios.defaults.headers.common['Authorization'];
+            }
+        } catch (error) {
+            console.error("Erreur lors du chargement des données utilisateur:", error);
+            localStorage.removeItem('user');
+            delete axios.defaults.headers.common['Authorization'];
+        }
     }
-    
+      
     setLoading(false);
-  }, []);
+}, []);
 
   // Login function - connects to the API
   const login = (token, role) => {

@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.Console;
+
 @RestController
 @RequestMapping("/api/generation")
 public class QuizGenerationController {
@@ -33,6 +35,7 @@ public class QuizGenerationController {
         } else {
             return ResponseEntity.badRequest().body(response);
         }
+
     }
 
      /**
@@ -51,6 +54,7 @@ public class QuizGenerationController {
         } else {
             return ResponseEntity.badRequest().body(response);
         }
+
     }
 
 }

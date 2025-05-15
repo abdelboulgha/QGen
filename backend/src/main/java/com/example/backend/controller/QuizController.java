@@ -1,6 +1,8 @@
 package com.example.backend.controller;
 
 import com.example.backend.beans.Quiz;
+import com.example.backend.dao.ProfesseurRepository;
+import com.example.backend.security.SecurityUtil;
 import com.example.backend.service.QuizService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,8 @@ public class QuizController {
 
     @Autowired
     private QuizService quizService;
+    private ProfesseurRepository professeurRepository;
+
 
     @GetMapping
     public List<Quiz> getAllQuizzes() {
@@ -37,15 +41,23 @@ public class QuizController {
         return quizService.getQuizzesByProfesseur(professeurId);
     }
 
-    @PostMapping("/professeur/{professeurId}")
-    public Quiz createQuiz(@RequestBody Quiz quiz, @PathVariable Long professeurId) {
-        return quizService.createQuiz(quiz, professeurId);
+    @PostMapping
+    public Quiz createQuiz(@RequestBody String quiz) {
+        System.err.println("Response : " + quiz);
+        return quizService.createQuizFromJson(quiz);
     }
 
-    @PutMapping
-    public Quiz updateQuiz(@RequestBody Quiz quiz) {
-        return quizService.updateQuiz(quiz);
+    @PutMapping("/{id}")
+    public ResponseEntity<Quiz> updateQuizWithQuestionsPartially(@PathVariable Long id, @RequestBody Quiz updatedQuiz) {
+        try {
+            Quiz quiz = quizService.updateQuizWithQuestionsPartially(id, updatedQuiz);
+            return ResponseEntity.ok(quiz);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
+
+
 
     @PutMapping("/{id}/publish")
     public ResponseEntity<Void> publishQuiz(@PathVariable Long id) {
@@ -57,5 +69,10 @@ public class QuizController {
     public ResponseEntity<Void> deleteQuiz(@PathVariable Long id) {
         quizService.deleteQuiz(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/professeur/summaries/{professeurId}")
+    public List<Object[]> getQuizSummariesByProf(@PathVariable Long professeurId) {
+        return quizService.getQuizSummariesByProfesseur(professeurId);
     }
 }

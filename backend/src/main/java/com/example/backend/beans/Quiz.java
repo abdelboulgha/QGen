@@ -122,4 +122,15 @@ public class Quiz {
     public void setTentatives(List<Tentative> tentatives) {
         this.tentatives = tentatives;
     }
+
+
+    @Override
+    public String toString() {
+        return "Quiz{" +
+                "titre='" + titre + '\'' +
+                ", description='" + description + '\'' +
+                ", duree=" + duree +
+                ", questions=" + questions +
+                '}';
+    }
 }

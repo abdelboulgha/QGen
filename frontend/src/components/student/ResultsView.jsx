@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import Layout from '../common/Layout';
 
 const ResultsView = () => {
   const { quizId } = useParams();
@@ -16,7 +17,7 @@ const ResultsView = () => {
       try {
         // Simulate API delay
         await new Promise(resolve => setTimeout(resolve, 800));
-        
+
         // Mock quiz data
         const mockQuiz = {
           id: quizId,
@@ -26,7 +27,7 @@ const ResultsView = () => {
           timeLimit: 30,
           totalQuestions: 5
         };
-        
+
         // Mock result data
         const mockResult = {
           id: 'r123',
@@ -118,7 +119,7 @@ const ResultsView = () => {
             }
           ]
         };
-        
+
         setQuiz(mockQuiz);
         setQuizResult(mockResult);
         setLoading(false);
@@ -127,7 +128,7 @@ const ResultsView = () => {
         setLoading(false);
       }
     };
-    
+
     fetchResults();
   }, [quizId, currentUser.id, currentUser.name]);
 
@@ -153,151 +154,158 @@ const ResultsView = () => {
   };
 
   if (loading) {
-    return <div className="loading">Chargement des résultats...</div>;
+    return (
+        <Layout title="Résultats" userRole="student">
+          <div className="loading">Chargement des résultats...</div>
+        </Layout>
+    );
   }
 
   if (!quizResult) {
     return (
-      <div className="content-area">
-        <h1>Résultats non disponibles</h1>
-        <p>Les résultats pour ce quiz n'ont pas été trouvés.</p>
-        <Link to="/student" className="btn btn-primary">Retour au tableau de bord</Link>
-      </div>
+        <Layout title="Résultats non disponibles" userRole="student">
+          <div className="content-area">
+            <h1>Résultats non disponibles</h1>
+            <p>Les résultats pour ce quiz n'ont pas été trouvés.</p>
+            <Link to="/student" className="btn btn-primary">Retour au tableau de bord</Link>
+          </div>
+        </Layout>
     );
   }
 
   return (
-    <div className="content-area">
-      <div className="header-actions">
-        <h1>Résultats du Quiz</h1>
-        <Link to="/student" className="btn btn-secondary">Retour au tableau de bord</Link>
-      </div>
+      <Layout title={`Résultats: ${quiz.title}`} userRole="student">
+        <div className="content-area">
+          <div className="header-actions">
+            <h1>Résultats du Quiz</h1>
+          </div>
 
-      <div className="quiz-info-banner">
-        <h2>{quiz.title}</h2>
-        <p>{quiz.description}</p>
-        <div className="quiz-meta">
-          <span>Créé par: {quiz.createdBy}</span>
-          <span>Temps limite: {quiz.timeLimit} minutes</span>
-        </div>
-      </div>
-
-      <div className="result-summary">
-        <div className="statistics-cards">
-          <div className="card">
-            <div className="card-header">
-              <h3 className="card-title">Score</h3>
-            </div>
-            <div className="card-content">
-              <p className={`stat-number ${quizResult.score >= 80 ? 'high' : quizResult.score >= 60 ? 'medium' : 'low'}`}>
-                {quizResult.score}%
-              </p>
+          <div className="quiz-info-banner">
+            <h2>{quiz.title}</h2>
+            <p>{quiz.description}</p>
+            <div className="quiz-meta">
+              <span>Créé par: {quiz.createdBy}</span>
+              <span>Temps limite: {quiz.timeLimit} minutes</span>
             </div>
           </div>
 
-          <div className="card">
-            <div className="card-header">
-              <h3 className="card-title">Points</h3>
-            </div>
-            <div className="card-content">
-              <p className="stat-number">{quizResult.earnedPoints}/{quizResult.totalPoints}</p>
-            </div>
-          </div>
-
-          <div className="card">
-            <div className="card-header">
-              <h3 className="card-title">Date de complétion</h3>
-            </div>
-            <div className="card-content">
-              <p className="stat-text">{formatDate(quizResult.completedAt)}</p>
-            </div>
-          </div>
-
-          <div className="card">
-            <div className="card-header">
-              <h3 className="card-title">Temps utilisé</h3>
-            </div>
-            <div className="card-content">
-              <p className="stat-text">{formatTime(quizResult.timeSpent)}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="section mt-4">
-        <h2>Détail des Réponses</h2>
-
-        <div className="questions-review">
-          {quizResult.questions.map((question, index) => (
-            <div className={`question-card ${question.isCorrect ? 'correct' : 'incorrect'}`} key={question.id}>
-              <div 
-                className="question-header" 
-                onClick={() => toggleQuestion(question.id)}
-              >
-                <h3>
-                  <span className="question-number">Question {index + 1}</span>
-                  {question.isCorrect ? 
-                    <span className="status-indicator correct">Correct</span> : 
-                    <span className="status-indicator incorrect">Incorrect</span>
-                  }
-                </h3>
-                <div className="question-points">
-                  {question.earnedPoints}/{question.points} points
+          <div className="result-summary">
+            <div className="statistics-cards">
+              <div className="card">
+                <div className="card-header">
+                  <h3 className="card-title">Score</h3>
                 </div>
-                <div className="expand-icon">
-                  {expandedQuestions[question.id] ? '▼' : '►'}
+                <div className="card-content">
+                  <p className={`stat-number ${quizResult.score >= 80 ? 'high' : quizResult.score >= 60 ? 'medium' : 'low'}`}>
+                    {quizResult.score}%
+                  </p>
                 </div>
               </div>
 
-              {expandedQuestions[question.id] && (
-                <div className="question-details">
-                  <p className="question-text">{question.text}</p>
-                  
-                  <div className="options-list">
-                    {question.options.map(option => (
-                      <div 
-                        key={option.id} 
-                        className={`
-                          option 
-                          ${option.selected ? 'selected' : ''} 
-                          ${option.isCorrect ? 'correct' : ''} 
-                          ${option.selected && !option.isCorrect ? 'wrong' : ''}
-                        `}
-                      >
-                        {question.type === 'checkbox' ? (
-                          <span className="checkbox">
-                            {option.selected ? '☑' : '☐'}
-                          </span>
-                        ) : (
-                          <span className="radio">
-                            {option.selected ? '●' : '○'}
-                          </span>
-                        )}
-                        <span className="option-text">{option.text}</span>
-                        {option.isCorrect && <span className="correct-mark">✓</span>}
-                      </div>
-                    ))}
-                  </div>
-                  
-                  {question.explanation && (
-                    <div className="explanation">
-                      <h4>Explication:</h4>
-                      <p>{question.explanation}</p>
-                    </div>
-                  )}
+              <div className="card">
+                <div className="card-header">
+                  <h3 className="card-title">Points</h3>
                 </div>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
+                <div className="card-content">
+                  <p className="stat-number">{quizResult.earnedPoints}/{quizResult.totalPoints}</p>
+                </div>
+              </div>
 
-      <div className="actions mt-4">
-        <Link to="/student" className="btn btn-primary">
-          Retour au tableau de bord
-        </Link>
-      </div>
-    </div>
+              <div className="card">
+                <div className="card-header">
+                  <h3 className="card-title">Date de complétion</h3>
+                </div>
+                <div className="card-content">
+                  <p className="stat-text">{formatDate(quizResult.completedAt)}</p>
+                </div>
+              </div>
+
+              <div className="card">
+                <div className="card-header">
+                  <h3 className="card-title">Temps utilisé</h3>
+                </div>
+                <div className="card-content">
+                  <p className="stat-text">{formatTime(quizResult.timeSpent)}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="section mt-4">
+            <h2>Détail des Réponses</h2>
+
+            <div className="questions-review">
+              {quizResult.questions.map((question, index) => (
+                  <div className={`question-card ${question.isCorrect ? 'correct' : 'incorrect'}`} key={question.id}>
+                    <div
+                        className="question-header"
+                        onClick={() => toggleQuestion(question.id)}
+                    >
+                      <h3>
+                        <span className="question-number">Question {index + 1}</span>
+                        {question.isCorrect ?
+                            <span className="status-indicator correct">Correct</span> :
+                            <span className="status-indicator incorrect">Incorrect</span>
+                        }
+                      </h3>
+                      <div className="question-points">
+                        {question.earnedPoints}/{question.points} points
+                      </div>
+                      <div className="expand-icon">
+                        {expandedQuestions[question.id] ? '▼' : '►'}
+                      </div>
+                    </div>
+
+                    {expandedQuestions[question.id] && (
+                        <div className="question-details">
+                          <p className="question-text">{question.text}</p>
+
+                          <div className="options-list">
+                            {question.options.map(option => (
+                                <div
+                                    key={option.id}
+                                    className={`
+                            option 
+                            ${option.selected ? 'selected' : ''} 
+                            ${option.isCorrect ? 'correct' : ''} 
+                            ${option.selected && !option.isCorrect ? 'wrong' : ''}
+                          `}
+                                >
+                                  {question.type === 'checkbox' ? (
+                                      <span className="checkbox">
+                              {option.selected ? '☑' : '☐'}
+                            </span>
+                                  ) : (
+                                      <span className="radio">
+                              {option.selected ? '●' : '○'}
+                            </span>
+                                  )}
+                                  <span className="option-text">{option.text}</span>
+                                  {option.isCorrect && <span className="correct-mark">✓</span>}
+                                </div>
+                            ))}
+                          </div>
+
+                          {question.explanation && (
+                              <div className="explanation">
+                                <h4>Explication:</h4>
+                                <p>{question.explanation}</p>
+                              </div>
+                          )}
+                        </div>
+                    )}
+                  </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="actions mt-4">
+            <Link to="/student" className="btn btn-primary">
+              Retour au tableau de bord
+            </Link>
+          </div>
+        </div>
+      </Layout>
   );
 };
 

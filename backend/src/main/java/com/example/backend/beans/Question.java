@@ -102,4 +102,14 @@ public class Question {
         options.add(option);
         option.setQuestion(this);
     }
+
+    @Override
+    public String toString() {
+        return "Question{" +
+                "enonce='" + enonce + '\'' +
+                ", points=" + points +
+                ", type=" + type +
+                ", options=" + options +
+                '}';
+    }
 }

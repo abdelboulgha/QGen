@@ -1,283 +1,265 @@
-import React, { useState } from 'react';
-import { 
-  X, 
-  FileUp, 
-  Share2, 
-  Book, 
-  Send,
-  Loader,
-  ChevronRight
+import React, {useState, useEffect} from 'react';
+import axios from 'axios';
+import {
+    X,
+    FileUp,
+    Share2,
+    Book,
+    Send,
+    Loader,
+    CheckCircle,
+    ChevronRight
 } from 'lucide-react';
+import './QuizGenerator.css';
 import Layout from '../common/Layout';
-import './QuizGenerator.css'; // Import du fichier CSS
+import logoImg from "../../utils/images/logo.png";
 
-// Composant fleur SVG pour remplacer le logo
 const FlowerLogo = () => (
-  <svg width="80" height="80" viewBox="0 0 120 120">
-    <g transform="translate(60, 60)">
-      {/* Pétales en dégradé de turquoise */}
-      {[...Array(8)].map((_, i) => {
-        const angle = (i * Math.PI) / 4;
-        const color = i % 2 === 0 ? '#4DD8C7' : '#25A6A4';
-        const lightColor = i % 2 === 0 ? '#7DEAE0' : '#4DD8C7';
-        return (
-          <g key={i} transform={`rotate(${angle * (180/Math.PI)})`}>
-            <path 
-              d="M0,0 Q10,15 0,30 Q-10,15 0,0" 
-              fill={lightColor} 
-              transform="translate(0, -15)"
-            />
-            <path 
-              d="M0,0 Q10,15 0,30 Q-10,15 0,0" 
-              fill={color} 
-              transform="translate(0, -5)"
-            />
-          </g>
-        );
-      })}
-      {/* Centre de la fleur */}
-      <circle cx="0" cy="0" r="8" fill="#108587" />
-    </g>
-  </svg>
+    <img src={logoImg} alt="QGen Logo" className="logo" style={{height: '50px'}}/>
+);
+
+const LoadingModal = ({message}) => (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fadeIn">
+        <div className="bg-white rounded-lg p-6 shadow-xl w-80 text-center">
+            <div className="flex justify-center mb-4">
+                <Loader size={40} className="animate-spin text-teal-500"/>
+            </div>
+            <p className="text-gray-700">{message}</p>
+        </div>
+    </div>
+);
+
+const SuccessModal = ({onClose, redirectCountdown}) => (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fadeIn">
+        <div className="bg-white rounded-lg p-6 shadow-xl w-96 text-center">
+            <div className="flex justify-center mb-4">
+                <CheckCircle size={60} className="text-green-500"/>
+            </div>
+            <h3 className="text-xl font-semibold text-gray-800 mb-2">Quiz généré avec succès!</h3>
+            <p className="text-gray-600 mb-6">Votre quiz a été créé et sera disponible dans la section de gestion des quiz.</p>
+            <p className="text-sm text-gray-500 mb-4">Redirection dans {redirectCountdown} secondes...</p>
+            <div>
+                <button
+                    onClick={onClose}
+                    className="px-6 py-2 bg-teal-500 text-white rounded-md hover:bg-teal-600 transition-all duration-200 shadow-md"
+                >
+                    OK
+                </button>
+            </div>
+        </div>
+    </div>
 );
 
 const QuizGenerator = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [inputText, setInputText] = useState('');
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [generatedQuiz, setGeneratedQuiz] = useState(null);
-  const [uploadedFile, setUploadedFile] = useState(null);
+    const [inputText, setInputText] = useState('');
+    const [isGenerating, setIsGenerating] = useState(false);
+    const [generatedQuiz, setGeneratedQuiz] = useState(null);
+    const [uploadedFile, setUploadedFile] = useState(null);
+    const [inputMethod, setInputMethod] = useState(null); // 'text' or 'file'
+    const [error, setError] = useState(null);
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [redirectCountdown, setRedirectCountdown] = useState(10);
 
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
+    const API_BASE_URL = 'http://localhost:8080';
+    const token = localStorage.getItem('token');
 
-  const handleTextChange = (e) => {
-    setInputText(e.target.value);
-  };
+    useEffect(() => {
+        let countdownTimer;
 
-  const handleFileUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setUploadedFile(file);
-      
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setInputText(event.target.result);
-      };
-      reader.readAsText(file);
-    }
-  };
+        if (showSuccessModal) {
+            countdownTimer = setInterval(() => {
+                setRedirectCountdown(prev => {
+                    if (prev <= 1) {
+                        clearInterval(countdownTimer);
+                        window.location.href = "/professor/manage-quiz";
+                        return 0;
+                    }
+                    return prev - 1;
+                });
+            }, 1000);
+        }
 
-  const generateQuiz = () => {
-    if (!inputText.trim()) {
-      alert('Veuillez fournir du contenu pour générer un quiz.');
-      return;
-    }
+        return () => {
+            if (countdownTimer) clearInterval(countdownTimer);
+        };
+    }, [showSuccessModal]);
 
-    setIsGenerating(true);
-    
-    // Simulation d'une requête API pour générer le quiz
-    setTimeout(() => {
-      // Exemple de quiz généré
-      const mockGeneratedQuiz = {
-        title: "Quiz généré automatiquement",
-        description: "Ce quiz a été créé à partir de votre contenu.",
-        questions: [
-          {
-            id: 1,
-            questionText: "Quelle est la première question générée?",
-            options: [
-              { id: 1, text: "Option 1", isCorrect: true },
-              { id: 2, text: "Option 2", isCorrect: false },
-              { id: 3, text: "Option 3", isCorrect: false },
-              { id: 4, text: "Option 4", isCorrect: false }
-            ],
-            explanation: "Explication de la réponse correcte."
-          },
-          {
-            id: 2,
-            questionText: "Voici une deuxième question générée.",
-            options: [
-              { id: 1, text: "Première option", isCorrect: false },
-              { id: 2, text: "Deuxième option", isCorrect: true },
-              { id: 3, text: "Troisième option", isCorrect: false },
-              { id: 4, text: "Quatrième option", isCorrect: false }
-            ],
-            explanation: "Explication pour la deuxième question."
-          }
-        ]
-      };
-      
-      setGeneratedQuiz(mockGeneratedQuiz);
-      setIsGenerating(false);
-      closeModal();
-    }, 2000);
-  };
+    const handleTextChange = (e) => {
+        setInputText(e.target.value);
+        if (e.target.value) {
+            setInputMethod('text');
+            setUploadedFile(null);
+        } else {
+            setInputMethod(null);
+        }
+    };
 
-  const saveGeneratedQuiz = () => {
-    // Ici, vous pourriez implémenter la logique pour sauvegarder le quiz
-    alert('Quiz sauvegardé avec succès!');
-    // Redirection vers la page de gestion des quiz
-    // navigate('/professor/manage-quiz');
-  };
+    const handleFileUpload = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setUploadedFile(file);
+            setInputMethod('file');
+            setInputText(''); // Clear text input when file is uploaded
+        }
+    };
 
-  const editQuiz = () => {
-    // Redirection vers la page de création de quiz avec les données pré-remplies
-    // navigate('/professor/create-quiz', { state: { quizData: generatedQuiz } });
-    alert('Redirection vers l\'éditeur de quiz');
-  };
+    const clearInput = () => {
+        setInputText('');
+        setUploadedFile(null);
+        setInputMethod(null);
+        setError(null);
+    };
 
-  return (
-    <Layout title="QGen" userRole="professor">
-      <div className="flex flex-col items-center justify-center min-h-screen bg-white px-4">
-        <div className="mb-6 mt-8">
-          <FlowerLogo />
-        </div>
+    const generateQuiz = async () => {
+        if ((!inputText.trim() && inputMethod === 'text') || (!uploadedFile && inputMethod === 'file')) {
+            setError('Veuillez fournir du contenu pour générer un quiz.');
+            return;
+        }
 
-        <h1 className="text-4xl font-bold text-gray-700 mb-2">Bienvenue sur QGen</h1>
-        <p className="text-gray-600 mb-8">Prêt à tester vos connaissances ?</p>
+        setIsGenerating(true);
+        setError(null);
 
-        {!generatedQuiz ? (
-          <div className="w-full max-w-lg">
-            <div className="flex items-center bg-gray-50 rounded-full shadow-md overflow-hidden pl-4 pr-2 py-2 border border-gray-100">
-              <div className="mr-3">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-gray-600">
-                  <rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect>
-                </svg>
-              </div>
-              <input
-                type="text"
-                placeholder="Indiquez un sujet, et laissez la magie opérer!"
-                className="flex-grow bg-transparent outline-none text-gray-700"
-                onClick={openModal}
-              />
-              <button className="ml-2 p-2 rounded-full text-teal-500" onClick={openModal}>
-                <ChevronRight size={20} />
-              </button>
-            </div>
-          </div>
-        ) : (
-          <div className="w-full max-w-lg mt-6">
-            <div className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100">
-              <div className="p-4 border-b border-gray-100 flex justify-between items-center">
-                <h3 className="text-lg font-semibold text-gray-700">{generatedQuiz.title}</h3>
-                <div className="flex space-x-2">
-                  <button 
-                    className="px-3 py-1 rounded-full text-teal-600 border border-teal-600 text-sm hover:bg-teal-50"
-                    onClick={editQuiz}
-                  >
-                    Modifier
-                  </button>
-                  <button 
-                    className="px-3 py-1 rounded-full bg-teal-500 text-white text-sm hover:bg-teal-600"
-                    onClick={saveGeneratedQuiz}
-                  >
-                    Sauvegarder
-                  </button>
+        try {
+            let response;
+
+            if (inputMethod === 'text') {
+                // Send text request
+                response = await axios.post(`${API_BASE_URL}/api/generation/quiz/text`, null, {
+                    params: {
+                        text: inputText
+                    },
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    }
+                });
+            } else if (inputMethod === 'file') {
+                // Send file request
+                const formData = new FormData();
+                formData.append('file', uploadedFile);
+
+                response = await axios.post(`${API_BASE_URL}/api/generation/quiz/pdf`, formData, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'multipart/form-data',
+                    }
+                });
+            }
+
+            if (response.data && response.data.success) {
+                setGeneratedQuiz(response.data.quiz);
+                // Show success modal instead of displaying quiz details
+                setShowSuccessModal(true);
+            } else {
+                setError(response.data.message || 'Une erreur est survenue lors de la génération du quiz.');
+            }
+        } catch (error) {
+            console.error('Error generating quiz:', error);
+            setError('Une erreur est survenue lors de la communication avec le serveur.');
+        } finally {
+            setIsGenerating(false);
+        }
+    };
+
+    const handleModalClose = () => {
+        setShowSuccessModal(false);
+        window.location.href = "/professor/manage-quiz";
+    };
+
+    return (
+        <Layout title="QGen" userRole="professor">
+            <div className="flex flex-col items-center justify-center min-h-screen bg-white px-4">
+                <div className="mb-6 mt-8">
+                    <FlowerLogo/>
                 </div>
-              </div>
-              <div className="p-4">
-                <p className="text-gray-600 mb-4">{generatedQuiz.description}</p>
-                
-                <h4 className="font-medium mb-2 text-gray-700">Aperçu des questions:</h4>
-                <div className="space-y-3">
-                  {generatedQuiz.questions.map((question, index) => (
-                    <div key={question.id} className="p-3 bg-gray-50 rounded-lg">
-                      <p className="font-medium text-gray-700">Question {index + 1}: {question.questionText}</p>
-                      <ul className="mt-2 space-y-1">
-                        {question.options.map(option => (
-                          <li 
-                            key={option.id} 
-                            className={`${option.isCorrect ? 'text-teal-600 font-medium' : 'text-gray-600'} ml-4`}
-                          >
-                            {option.text} {option.isCorrect && '(Correcte)'}
-                          </li>
-                        ))}
-                      </ul>
+
+                <h1 className="text-4xl font-bold text-gray-700 mb-2">Bienvenue sur QGen</h1>
+                <p className="text-gray-600 mb-8">Prêt à tester vos connaissances ?</p>
+
+                {isGenerating && (
+                    <LoadingModal message="Génération de votre quiz en cours..."/>
+                )}
+
+                {showSuccessModal && (
+                    <SuccessModal
+                        onClose={handleModalClose}
+                        redirectCountdown={redirectCountdown}
+                    />
+                )}
+
+                <div className="w-full max-w-lg">
+                    <div className="bg-white rounded-lg shadow-md p-6">
+                        {error && (
+                            <div className="mb-4 p-3 bg-red-50 text-red-600 rounded-lg border border-red-200 animate-fadeIn">
+                                {error}
+                            </div>
+                        )}
+                        <div className="mb-4 relative">
+                            <textarea
+                                className={`w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:border-transparent ${
+                                    inputMethod === 'file' ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'
+                                }`}
+                                rows="6"
+                                placeholder="Écrivez ou collez votre texte ici..."
+                                value={inputText}
+                                onChange={handleTextChange}
+                                disabled={inputMethod === 'file'}
+                            ></textarea>
+                            {inputText && (
+                                <button
+                                    onClick={clearInput}
+                                    className="absolute top-2 right-2 p-1 rounded-full hover:bg-gray-100"
+                                >
+                                    <X size={16} className="text-gray-500"/>
+                                </button>
+                            )}
+                        </div>
+
+                        <div className="flex items-center space-x-4 mb-6">
+                            <div className="flex-1">
+                                <label
+                                    htmlFor="fileUpload"
+                                    className={`inline-flex items-center px-4 py-2 border border-gray-300 rounded-md w-full justify-center ${
+                                        inputMethod === 'text'
+                                            ? 'bg-gray-100 cursor-not-allowed text-gray-500'
+                                            : 'bg-white hover:bg-gray-50 cursor-pointer text-gray-700'
+                                    }`}
+                                >
+                                    <FileUp size={18} className="mr-2"/>
+                                    Importer un fichier
+                                </label>
+                                <input
+                                    type="file"
+                                    id="fileUpload"
+                                    className="hidden"
+                                    onChange={handleFileUpload}
+                                    accept=".txt,.pdf,.doc,.docx"
+                                    disabled={inputMethod === 'text'}
+                                />
+                            </div>
+                            {uploadedFile && (
+                                <span className="text-sm text-gray-600 flex-1 truncate">
+                                    {uploadedFile.name}
+                                </span>
+                            )}
+                        </div>
+
+                        <button
+                            className={`w-full px-4 py-3 rounded-md flex items-center justify-center transition-all duration-200 shadow-md ${
+                                (!inputText.trim() && inputMethod === 'text') || (!uploadedFile && inputMethod === 'file') || !inputMethod
+                                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                                    : 'bg-teal-500 text-white hover:bg-teal-600 transform hover:-translate-y-1'
+                            }`}
+                            onClick={generateQuiz}
+                            disabled={(!inputText.trim() && inputMethod === 'text') || (!uploadedFile && inputMethod === 'file') || !inputMethod}
+                        >
+                            <Send size={16} className="mr-2"/>
+                            Générer le Quiz
+                        </button>
                     </div>
-                  ))}
                 </div>
-              </div>
             </div>
-          </div>
-        )}
-
-        {/* Modal pour la génération de quiz */}
-        {isModalOpen && (
-          <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-lg shadow-xl w-full max-w-lg">
-              <div className="flex justify-between items-center p-4 border-b">
-                <h3 className="text-lg font-semibold text-gray-700">Générer un Quiz</h3>
-                <button 
-                  className="text-gray-500 hover:text-gray-700"
-                  onClick={closeModal}
-                >
-                  <X size={20} />
-                </button>
-              </div>
-              <div className="p-4">
-                <div className="mb-4">
-                  <label htmlFor="contentInput" className="block mb-2 text-gray-700">Contenu source</label>
-                  <textarea 
-                    id="contentInput"
-                    className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:border-transparent"
-                    rows="6"
-                    placeholder="Collez votre texte ici ou importez un fichier..."
-                    value={inputText}
-                    onChange={handleTextChange}
-                  ></textarea>
-                </div>
-                
-                <div className="mb-4">
-                  <label htmlFor="fileUpload" className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50 cursor-pointer">
-                    <FileUp size={18} className="mr-2" />
-                    Importer un fichier
-                  </label>
-                  <input 
-                    type="file" 
-                    id="fileUpload" 
-                    className="hidden"
-                    onChange={handleFileUpload}
-                    accept=".txt,.pdf,.doc,.docx"
-                  />
-                  {uploadedFile && (
-                    <span className="ml-2 text-gray-600">
-                      {uploadedFile.name}
-                    </span>
-                  )}
-                </div>
-              </div>
-              <div className="flex justify-end p-4 bg-gray-50 rounded-b-lg">
-                <button 
-                  className="px-4 py-2 rounded-md text-gray-600 hover:bg-gray-100 mr-2"
-                  onClick={closeModal}
-                >
-                  Annuler
-                </button>
-                <button 
-                  className="px-4 py-2 rounded-md bg-teal-500 text-white hover:bg-teal-600 flex items-center"
-                  onClick={generateQuiz}
-                  disabled={isGenerating}
-                >
-                  {isGenerating ? (
-                    <>
-                      <Loader size={16} className="animate-spin mr-2" />
-                      Génération en cours...
-                    </>
-                  ) : (
-                    <>
-                      <Send size={16} className="mr-2" />
-                      Générer le Quiz
-                    </>
-                  )}
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-    </Layout>
-  );
+        </Layout>
+    );
 };
 
 export default QuizGenerator;

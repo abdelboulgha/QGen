@@ -66,4 +66,13 @@ public class QuestionOption {
     public void setFeedback(String feedBack) {
         this.feedback = feedBack;
     }
+
+    @Override
+    public String toString() {
+        return "QuestionOption{" +
+                "valeurReponse='" + valeurReponse + '\'' +
+                ", estCorrecte=" + estCorrecte +
+                ", feedback='" + feedback + '\'' +
+                '}';
+    }
 }

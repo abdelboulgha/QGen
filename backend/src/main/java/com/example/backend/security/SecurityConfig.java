@@ -34,8 +34,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/login").permitAll() // Autoriser l'accès à l'authentification
                         .requestMatchers("/api/auth/change-password").permitAll()
+                        .requestMatchers("/api/question-options/question/**").permitAll()
                         .requestMatchers("/api/admins/create-user").permitAll()
                         .requestMatchers("/api/admins/create-user").permitAll()// Nécessite une authentification
+                        .requestMatchers("/api/quizzes/**").permitAll()
                         //.requestMatchers("/api/admins/**").hasRole("ADMIN") // Réservé aux admins
                         .requestMatchers("/api/admins/**").permitAll()
                         .requestMatchers("/api/generation/quiz/**").permitAll()
@@ -43,9 +45,10 @@ public class SecurityConfig {
                         .requestMatchers("/api/etudiants/**").hasAnyRole("ADMIN", "PROFESSOR") // Admin et profs
                         .requestMatchers("/api/utilisateurs/**").hasRole("ADMIN") // Réservé aux admins
                         // Les accès aux quiz dépendent du contexte métier
-                        .requestMatchers("/api/quizzes/**").authenticated()
+                        //.requestMatchers("/api/quizzes/**").authenticated()
                         .requestMatchers("/api/generation/quiz/pdf/**").permitAll()
-                        .requestMatchers("/api/questions/**").authenticated()
+                        //.requestMatchers("/api/questions/**").authenticated()
+                        .requestMatchers("/api/questions/**").permitAll()
                         .requestMatchers("/api/tentatives/**").authenticated()
                         .requestMatchers("/api/reponses/**").authenticated()
                         .requestMatchers("/api/notifications/**").authenticated()
